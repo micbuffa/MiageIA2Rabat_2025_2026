@@ -35,10 +35,10 @@ target.vel = v;
 */
 
   // pursuer = le véhicule poursuiveur, il vise un point devant la cible
-  let force = pursuer.pursue(target);
+  let force = pursuer.pursue(target, 200);
   pursuer.applyForce(force);
 
-  let evadeForce = target.evade(pursuer);
+  let evadeForce = target.evade(pursuer, 20);
   target.applyForce(evadeForce);  
 
   // déplacement et dessin du véhicule et de la target

@@ -40,7 +40,7 @@ class Vehicle {
     }
 
     */
-   
+
     // on calcule la direction vers la cible
     // C'est l'ETAPE 1 (action : se diriger vers une cible)
     let desiredSpeed = p5.Vector.sub(target, this.pos);
@@ -155,9 +155,13 @@ class Target extends Vehicle {
   }
 
   show() {
+    // formes pleines en vert
     fill("green");
-    noStroke();
-    circle(this.pos.x, this.pos.y, 32);
+    // formes fil de fer en blanc
+    stroke("white");
+    // epaisseur du trait = 5
+    strokeWeight(5);
+    circle(this.pos.x, this.pos.y, 64);
   }
 
 }

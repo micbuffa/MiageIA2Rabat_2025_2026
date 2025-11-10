@@ -17,7 +17,7 @@ class Vehicle {
   /*
    seek est une méthode qui permet de faire se rapprocher le véhicule de la cible passée en paramètre
    */
-    seek(target) {
+    seek(target, distanceDeDetection = Infinity) {
     // on calcule la direction vers la cible
     // C'est l'ETAPE 1 (action : se diriger vers une cible)
     let force = p5.Vector.sub(target, this.pos);
@@ -34,8 +34,8 @@ class Vehicle {
   }
 
   // inverse de seek !
-  flee(target) {
-    return this.seek(target.pos).mult(-1);
+  flee(target, distanceDeDetection = Infinity) {
+    return this.seek(target.pos, distanceDeDetection).mult(-1);
   }
 
   /* Poursuite d'un point devant la target !
@@ -45,31 +45,36 @@ class Vehicle {
     // TODO
     // 1 - calcul de la position future de la cible
     // on fait une copie de la vitesse de la target
-    // 2 - On calcule un vecteur colinéaire au vecteur vitesse de la cible,
-    // TODO
+    let prediction = target.vel.copy();
 
     // et on le multiplie par 10 (10 frames)
     // 3 - prediction dans 10 frames = 10 fois la longueur du vecteur
     // (on multiplie le vecteur vitesse par 10)
     // TODO
+    prediction.mult(10);
 
     // 4 - on positionne de la target au bout de ce vecteur
     // (on ajoute ce vecteur à la position de la target)
     // TODO
+    prediction.add(target.pos);
+
+    // on dessine le point devant le véhicule
+    fill("green");
+    noStroke();
+    circle(prediction.x, prediction.y, 16);
 
     // 5 -dessin du vecteur prediction
-    //let v = p5.Vector.sub(prediction, target.pos);
-    //this.drawVector(target.pos, v);
+    let v = p5.Vector.sub(prediction, target.pos);
+    this.drawVector(target.pos, v);
 
 
     // 6 - dessin d'un cercle vert de rayon 16 pour voir ce point
     
 
     // 3 - appel à seek avec ce point comme cible 
-    //let force = this.seek(prediction);
+    let force = this.seek(prediction);
 
     // n'oubliez pas, on renvoie la force à appliquer au véhicule !
-    let force = createVector(0,0); // TODO : supprimer cette ligne
     return force;
   }
 
@@ -78,7 +83,7 @@ class Vehicle {
   */
   evade(target) {
     // TODO : on inverse la logique de pursue
-    let force = createVector(0,0); // TODO : supprimer cette ligne
+    let force = this.pursue(target).mult(-1);
     return force;
   }
 

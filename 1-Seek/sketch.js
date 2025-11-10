@@ -1,4 +1,4 @@
-let target, vehicle;
+let target, target2, vehicle;
 let vitesseMaxSlider, accelerationMaxSlider, tailleVehiculeSlider ;
 // tableau de véhicules
 let vehicles = [];
@@ -19,7 +19,11 @@ function setup() {
   creerVehicules(nbVehicles);
 
   // La cible est un vecteur avec une position aléatoire dans le canvas
+  // dirigée par la souris ensuite dans draw()
   target = createVector(random(width), random(height));
+
+  // la cible mobile
+  target2 = new Target(random(width), random(height));
 
    // On crée un slider pour régler la vitesse max des véhicules
   // On crée le slider et on le positionne
@@ -110,7 +114,13 @@ function draw() {
   // pas de contours car on a appelé noStroke() plus haut
   circle(target.x, target.y, 32);
 
-
+  // On dessine aussi la cible mobile
+  target2.vel.x += random(-0.5, 0.5);
+  target2.vel.y += random(-0.5, 0.5);
+  
+  target2.update();
+  target2.edges();
+  target2.show();
 
   // TODO :au lieu d'afficher un seul véhicule
   // faire une boucle pour afficher plusieurs véhicules
@@ -121,12 +131,12 @@ function draw() {
     vehicle.maxForce = accelerationMaxSlider.value();
 
     // je déplace et dessine le véhicule
-    vehicle.applyBehaviors(target);
+    vehicle.applyBehaviors(target2.pos);
     vehicle.update();
 
     // Detecter si collision avec la cible
     // on calcule la distance avec la cible
-    let d = p5.Vector.dist(vehicle.pos, target);
+    let d = p5.Vector.dist(vehicle.pos, target2.pos);
     if(d < vehicle.r) {
       // il y a collision
       // on déplace le vehicule à une position aléatoire
