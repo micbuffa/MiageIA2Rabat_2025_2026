@@ -41,7 +41,22 @@ class Vehicle {
   /* Poursuite d'un point devant la target !
      cette methode renvoie la force à appliquer au véhicule
   */
-  pursue(target) {
+  pursue(target, rayonDetection) {
+    // on dessine le rayon de detection
+    push();
+    noFill();
+
+    stroke("white");
+    circle(this.pos.x, this.pos.y, rayonDetection);
+    pop();
+
+    // On ne va poursuivre que si la target est dans le 
+    // rayon de detection
+    let d = p5.Vector.dist(this.pos, target.pos);
+    if (d > rayonDetection) return createVector(0, 0); 
+
+    // else -> on effectue la poursuite
+
     // TODO
     // 1 - calcul de la position future de la cible
     // on fait une copie de la vitesse de la target

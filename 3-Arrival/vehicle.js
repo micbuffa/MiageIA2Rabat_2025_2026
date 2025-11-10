@@ -29,7 +29,7 @@ class Vehicle {
 
   arrive(target, d = 0) {
     // 2nd argument true enables the arrival behavior
-    // 3rd argumlent d is the distance behind the target
+    // 3rd argument d is the distance behind the target
     // for "snake" behavior
     return this.seek(target, true, d);
   }
@@ -70,7 +70,7 @@ class Vehicle {
       // si d = rayon alors desiredSpeed = maxSpeed
       // si d = 0 alors desiredSpeed = 0
       if (distance < this.rayonZoneDeFreinage) {
-        //desiredSpeed = map(distance, d, this.rayonZoneDeFreinage, 0, this.maxSpeed);
+        desiredSpeed = map(distance, d, this.rayonZoneDeFreinage, 0, this.maxSpeed);
       }
     }
 

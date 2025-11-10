@@ -1,5 +1,5 @@
 let pursuer;
-let target;
+let targets = [];
 let sliderVitesseMaxCible;
 
 function setup() {
@@ -7,9 +7,12 @@ function setup() {
   pursuer = new Vehicle(random(width), random(height));
   pursuer.maxSpeed = 4;
   pursuer.maxForce = 0.2;
+  pursuer.vel = createVector(2, 4)
   target = new Target(random(width), random(height));
   target.maxSpeed = 3;
   target.maxForce = 1;
+
+  targets.push(target);
 }
 
 let oldMousePos;
@@ -19,39 +22,42 @@ function draw() {
 
   // pursuer = le véhicule poursuiveur, il vise un point devant la cible
   //let force = pursuer.pursuePerfect(target);
-  let force = pursuer.pursue(target);
+  target = targets[0]
+  let force = pursuer.pursue(target, 300);
   pursuer.applyForce(force);
-
-  // TODO : ne s'évader que si le poursuer est dans un cercle autour de la target
-  // 1 - dessiner le cercle
-  let rayonDetection = 50;
-  push();
-  noFill();
-  stroke("white");
-  circle(target.pos.x, target.pos.y, rayonDetection * 2);
-  pop();
 
   // 2 - calculer la distance etc.
   let d = p5.Vector.dist(pursuer.pos, target.pos);
-  if (d < rayonDetection) {
+  if (d < target.rayonDetection) {
     target.maxSpeed = 20;
+    target.maxForce = 2;
     // on est dans le cercle de détection, on s'évade
     let evadeForce = target.evade(pursuer);
-    target.applyForce(evadeForce);  
-  } else if (d >= (rayonDetection + 200) ) {
-     target.maxSpeed = 3;
+    target.applyForce(evadeForce);
+
+    // on cree des leurres
+    let leurre = new Target(target.pos.x, target.pos.y);
+    leurre.r = 3;
+    targets.push(leurre)
+
+  } else if (d >= (target.rayonDetection + 200)) {
+    target.maxSpeed = 3;
+    target.maxForce = 0.1;
   }
-  
+
 
   // déplacement et dessin du véhicule et de la target
   pursuer.update();
   pursuer.edges();
   pursuer.show();
 
-  // lorsque la target atteint un bord du canvas elle ré-apparait de l'autre côté
-  target.edges();
-  // mettre en commentaire la ligne suivante
-  // si cible controlée à la souris
-  target.update();
-  target.show();
+  // on déplace et on dessine toutes les targets
+  targets.forEach(target => {
+    // lorsque la target atteint un bord du canvas elle ré-apparait de l'autre côté
+    target.edges();
+    // mettre en commentaire la ligne suivante
+    // si cible controlée à la souris
+    target.update();
+    target.show();
+  });
 }
