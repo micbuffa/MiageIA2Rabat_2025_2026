@@ -48,30 +48,30 @@ class Vehicle {
     let prediction = target.vel.copy();
 
     // et on le multiplie par 10 (10 frames)
-    // 3 - prediction dans 10 frames = 10 fois la longueur du vecteur
+    // 2 - prediction dans 10 frames = 10 fois la longueur du vecteur
     // (on multiplie le vecteur vitesse par 10)
     // TODO
     prediction.mult(10);
 
-    // 4 - on positionne de la target au bout de ce vecteur
+    // 3 - on positionne de la target au bout de ce vecteur
     // (on ajoute ce vecteur à la position de la target)
     // TODO
     prediction.add(target.pos);
 
+    
+
+    // 4 -dessin du vecteur prediction
+    let v = p5.Vector.sub(prediction, target.pos);
+    this.drawVector(target.pos, v);
+
+
+    // 5 - dessin d'un cercle vert de rayon 16 pour voir ce point
     // on dessine le point devant le véhicule
     fill("green");
     noStroke();
     circle(prediction.x, prediction.y, 16);
 
-    // 5 -dessin du vecteur prediction
-    let v = p5.Vector.sub(prediction, target.pos);
-    this.drawVector(target.pos, v);
-
-
-    // 6 - dessin d'un cercle vert de rayon 16 pour voir ce point
-    
-
-    // 3 - appel à seek avec ce point comme cible 
+    // 6 - appel à seek avec ce point comme cible 
     let force = this.seek(prediction);
 
     // n'oubliez pas, on renvoie la force à appliquer au véhicule !

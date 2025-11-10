@@ -12,28 +12,7 @@ let oldMousePos;
 
 function draw() {
   background(0);
-
-  // Enlever les commentaires pour
-  // cible controlée par souris
-  /*
-  target.pos.x = mouseX;
-  target.pos.y = mouseY;
-
   
-  if(oldMousePos === undefined) {
-    oldMousePos = {};
-    oldMousePos.pos = createVector(mouseX, mouseY);
-    oldMousePos.pos.x = mouseX;
-    oldMousePos.pos.y = mouseY;
-
-  }
-// vitesse estimées = la différence entre la nouvelle
-// pos de la souris et l'ancienne
-let v = p5.Vector.sub(target.pos, oldMousePos.pos);
-
-target.vel = v;
-*/
-
   // pursuer = le véhicule poursuiveur, il vise un point devant la cible
   let force = pursuer.pursue(target, 200);
   pursuer.applyForce(force);
