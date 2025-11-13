@@ -99,11 +99,17 @@ function pldistance(p1, p2, x, y) {
     // la fin du circuit
     check(checkpoints) {
       if (!this.finished) {
-        // On a pas fait un tout complet, on regarde quel est le checkpoint courant
+        // On a pas fait un tout complet, on regarde quel est le checkpoint à atteindre
+        // rappel : un checkpoint est une ligne avec deux points a et b
+        // et la voiture doit le "franchir"
         this.goal = checkpoints[this.index];
 
         // Est-ce qu'on a atteint le checkpoint ?
+        // La fonction pldistance calcule la distance
+        // entre un point et une ligne définie par deux points
+        // c'est fourni par p5.js
         const d = pldistance(this.goal.a, this.goal.b, this.pos.x, this.pos.y);
+      
         if (d < 5) {
           // Si on l'a atteint, on passe au checkpoint suivant
           this.index = (this.index + 1) % checkpoints.length;
@@ -179,10 +185,6 @@ function pldistance(p1, p2, x, y) {
           // line(this.pos.x, this.pos.y, closest.x, closest.y);
         }
       }
-      // const vel = this.vel.copy();
-      // vel.normalize();
-      // inputs.push(vel.x);
-      // inputs.push(vel.y);
 
       // On demande au réseau de neurones de prédire la prochaine action
       // output est un tableau à deux dimensions, deux neurones en sortie
@@ -193,7 +195,6 @@ function pldistance(p1, p2, x, y) {
       
       let angle = map(output[0], 0, 1, -PI, PI);
       let speed = map(output[1], 0, 1, 0, this.maxspeed);
-      // angle = this.vel.heading() + angle;
       angle += this.vel.heading();
 
       // Calcul de la force à appliquer
@@ -211,13 +212,6 @@ function pldistance(p1, p2, x, y) {
       return force;
     }
   
-    // Si la voiture sort du canvas, on la tue
-    bounds() {
-      if (this.pos.x > width || this.pos.x < 0 || this.pos.y > height || this.pos.y < 0) {
-        this.dead = true;
-      }
-    }
-  
     // Dessin de la voiture
     show() {
       push();
@@ -228,12 +222,6 @@ function pldistance(p1, p2, x, y) {
       rectMode(CENTER);
       rect(0, 0, 10, 5);
       pop();
-      // for (let ray of this.rays) {
-      //   // ray.show();
-      // }
-      // if (this.goal) {
-      //   this.goal.show();
-      // }
     }
   
     // Met en surbrillance la voiture
@@ -247,6 +235,8 @@ function pldistance(p1, p2, x, y) {
       rectMode(CENTER);
       rect(0, 0, 20, 10);
       pop();
+
+      // On dessine aussi les rayons de la voiture en tête
       for (let ray of this.rays) {
         ray.show();
       }

@@ -7,6 +7,9 @@
 const flock = [];
 let fishImage;
 let requinImage;
+let obstacleSouris;
+
+let obstacles = [];
 
 let alignSlider, cohesionSlider, separationSlider;
 let labelNbBoids;
@@ -58,6 +61,10 @@ function setup() {
   requin.r = 40;
   requin.maxSpeed = 7;
   requin.maxForce = 0.5;
+
+  // souris = obstacle
+  obstacleSouris = new Obstacle(mouseX, mouseY, 30, "lightgreen");
+  obstacles.push(obstacleSouris);
 }
 
 function creerUnSlider(label, tabVehicules, min, max, val, step, posX, posY, propriete) {
@@ -109,6 +116,11 @@ function draw() {
 
     boid.fleeWithTargetRadius(requin);
 
+    // on tester le comportement fleeWithTargetRadius sur tous les obstacles
+    obstacles.forEach(obstacle => {
+      boid.fleeWithTargetRadius(obstacle);
+    });
+
     boid.update();
     boid.show();
   }  
@@ -147,6 +159,17 @@ function draw() {
   requin.edges();
   requin.update();
   requin.show();
+
+  // souris = obstacle
+  obstacleSouris.pos.x = mouseX;
+  obstacleSouris.pos.y = mouseY;
+
+  // On dessine tous les obstacles
+  obstacles.forEach(obstacle => {
+    obstacle.show();
+  });
+
+  //
 }
 
 function mouseDragged() {
@@ -167,5 +190,9 @@ function keyPressed() {
     flock.forEach(b => {
       b.r = random(8, 40);
     });
+  } else if( key === 'o') {
+    // ajouter un obstacle à la position de la souris
+    let o = new Obstacle(mouseX, mouseY, random(20, 60), "lightgreen");
+    obstacles.push(o);
   }
 }

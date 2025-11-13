@@ -136,13 +136,19 @@ function draw() {
     }
   }
 
-  for (let cp of checkpoints) {
-    //strokeWeight(2);
-    //cp.show();
-  }
-  // on dessine les murs
+  // on dessine les murs du circuit
   for (let wall of walls) {
     wall.show();
+  }
+
+  // On dessine les checkpoints du circuit
+  for (let cp of checkpoints) {
+    push();
+    stroke("blue");
+    strokeWeight(2);
+    // un checkpoint est une ligne entre cp.a et cp.b
+    line(cp.a.x, cp.a.y, cp.b.x, cp.b.y);
+    pop();
   }
 
   // On dessine les voitures

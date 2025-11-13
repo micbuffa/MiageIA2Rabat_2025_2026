@@ -4,7 +4,9 @@
 function nextGeneration() {
     console.log('next generation');
     
-    calculateFitness(end);
+    // On calcule la fitness de chaque voiture: on regarde
+    // combien de checkpoints elle a passé
+    calculateFitnessForAllCars();
 
     for (let i = 0; i < TOTAL; i++) {
       // Pour la mutation, on choisit un parent au hasard
@@ -41,7 +43,6 @@ function nextGeneration() {
 
     // l'heureux élu !
     let vehicle = savedVehicles[index];
-    // TODO implement copy Particle
     // on en fait une copie et on la mute
     let child = new Vehicle(vehicle.brain);
     child.mutate();
@@ -49,7 +50,7 @@ function nextGeneration() {
   }
   
   // On calcule la fitness de chaque voiture
-  function calculateFitness(target) {
+  function calculateFitnessForAllCars() {
     for (let vehicle of savedVehicles) {
       vehicle.calculateFitness();
     }

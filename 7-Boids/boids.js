@@ -175,8 +175,6 @@ class Boid {
     const d = this.pos.dist(target.pos);
     let rayonZoneAFuir = target.r + 10;
 
-    
-
     if (d < rayonZoneAFuir) {
       // On dessine le cercle de la zone à fuir
       push();
