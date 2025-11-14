@@ -42,6 +42,8 @@ class Vehicle {
     // chemin derrière vaisseaux
     this.path = [];
     this.pathMaxLength = 30;
+
+   
   }
 
   // on fait une méthode applyBehaviors qui applique les comportements
@@ -247,7 +249,7 @@ class Vehicle {
 
   // Exerce une force renvoyant vers le centre du canvas si le véhicule s'approche
   // des bords du canvas
-  boundaries() {
+  boundariesOld() {
     const d = 25;
 
     let desired = null;
@@ -274,6 +276,68 @@ class Vehicle {
     }
     return createVector(0, 0);
   }
+
+  // Permet de rester dans les limites d'une zone rectangulaire.
+  // Lorsque le véhicule s'approche d'un bord vertical ou horizontal
+  // on calcule la vitesse désirée dans la direction "réfléchie" par
+  // rapport au bord (comme au billard).
+  // Par exemple, si le véhicule s'approche du bord gauche à moins de 
+  // 25 pixels (valeur par défaut de la variable d),
+  // on calcule la vitesse désirée en gardant le x du vecteur vitesse
+  // et en mettant son y positif. x vaut maxSpeed et y vaut avant une valeur
+  // négative (puisque le véhicule va vers la gauche), on lui donne un y positif
+  // ça c'est pour la direction à prendre (vitesse désirée). Une fois la direction
+  // calculée on lui donne une norme égale à maxSpeed, puis on calcule la force
+  // normalement : force = vitesseDesiree - vitesseActuelle
+  // paramètres = un rectangle (bx, by, bw, bh) et une distance d
+  boundaries(bx, by, bw, bh, d) {
+    let vitesseDesiree = null;
+
+    const xBordGauche = bx + d;
+    const xBordDroite = bx + bw - d;
+    const yBordHaut = by + d;
+    const yBordBas = by + bh - d;
+
+    // si le véhicule est trop à gauche ou trop à droite
+    if (this.pos.x < xBordGauche) {
+      // 
+      vitesseDesiree = createVector(this.maxSpeed, this.vel.y);
+    } else if (this.pos.x > xBordDroite) {
+      vitesseDesiree = createVector(-this.maxSpeed, this.vel.y);
+    }
+
+    if (this.pos.y < yBordHaut) {
+      vitesseDesiree = createVector(this.vel.x, this.maxSpeed);
+    } else if (this.pos.y > yBordBas) {
+      vitesseDesiree = createVector(this.vel.x, -this.maxSpeed);
+    }
+
+    if (vitesseDesiree !== null) {
+      vitesseDesiree.setMag(this.maxSpeed);
+      const force = p5.Vector.sub(vitesseDesiree, this.vel);
+      vitesseDesiree.limit(this.maxForce);
+      return vitesseDesiree;
+    }
+
+    if (Boid.debug) {
+      // dessin du cadre de la zone
+      push();
+
+      noFill();
+      stroke("white");
+      rect(bx, by, bw, bh);
+
+      // et du rectangle intérieur avec une bordure rouge de d pixels
+      stroke("red");
+      rect(bx + d, by + d, bw - 2 * d, bh - 2 * d);
+
+      pop();
+    }
+
+    // si on est pas près du bord (vitesse désirée nulle), on renvoie un vecteur nul
+    return createVector(0, 0);
+  }
+
 
   getObstacleLePlusProche(obstacles) {
     let plusPetiteDistance = 100000000;

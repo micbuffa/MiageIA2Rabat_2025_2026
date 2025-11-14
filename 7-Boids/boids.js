@@ -44,9 +44,9 @@ class Boid {
     this.boundariesWeight = 10;
 
     // Paramètres comportement confinement
-    this.boundariesX = 0;
-    this.boundariesY = 0
-    this.boundariesWidth = width;
+    this.boundariesX = 110;
+    this.boundariesY = 200
+    this.boundariesWidth = width/2;
     this.boundariesHeight = height;
     this.boundariesDistance = 25;
 
